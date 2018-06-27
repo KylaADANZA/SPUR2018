@@ -1,0 +1,114 @@
+model SALT
+
+--classes
+
+class Hospital
+attributes
+  name : String
+  phone : Integer
+  address : String
+end
+
+class Patient
+attributes
+  FirstName : String
+  LastName : String
+  id : String
+  gender : Gender
+  birthday : Integer
+  dateAdmit : String
+  timeAdmit : String
+  accident : Boolean
+  assigned : Boolean
+  riskChecked: Boolean
+end
+
+class PatientAfter
+attributes
+  severity: Severity
+end
+
+class Breathing
+attributes
+  breathing: Boolean
+operations
+  check(p : Patient)
+end
+
+class Injury
+attributes
+  MinorInjuryOnly: Boolean
+operations
+  checkInjury(p : Patient)
+end
+
+class SurviveCurrentResources
+attributes
+  SurviveCurrent: Boolean
+operations
+  check(p : Patient)
+end
+
+class Multiple
+attributes
+  ObeyCommands : Boolean
+  PeripheralPulse: Boolean
+  RespDistress: Boolean
+  HemorrhageControlled: Boolean
+operations
+  testCommands(p : Patient)
+  checkPulse(p : Patient)
+  LookRespDistress(p : Patient)
+  ControlHemorrhage(p : Patient)
+  checkHemorrhage(p : Patient)
+end
+
+
+-- associations
+
+composition ConsistOf between
+  Hospital[1]
+  Patient[1..*]
+end
+
+association StepOne between
+  Breathing[1]
+  Patient[1..*]
+end
+
+association No between
+  Breathing[1]
+  PatientAfter[1..*]
+end
+
+association yes between
+  Breathing[1]
+  Multiple[1]
+end
+
+association AllYes between
+  Multiple[1]
+  Injury[1]
+end
+
+association YesOrNo between
+  PatientAfter[1]
+  Injury[1]
+end
+
+association AnyNo between
+  Multiple[1]
+  SurviveCurrentResources[1]
+end
+
+association YesOrNo1 between
+  PatientAfter[1]
+  SurviveCurrentResources[1]
+end
+
+
+
+-- enumeration
+
+enum Severity {Expectant, Immediate, Delayed, Minor}
+enum Gender {Male, Female}

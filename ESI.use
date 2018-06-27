@@ -1,0 +1,112 @@
+model ESI
+
+--classes
+
+class Hospital
+attributes
+  name : String
+  phone : Integer
+  address : String
+end
+
+class Patient
+attributes
+  FirstName : String
+  LastName : String
+  id : String
+  gender : Gender
+  birthday : Integer
+  dateAdmit : String
+  timeAdmit : String
+  accident : Boolean
+  assigned : Boolean
+  riskChecked: Boolean
+end
+
+class PatientAfter
+attributes
+  severity: Severity
+end
+
+class ImmediateIntervention
+attributes
+  RequiresIntervention : Boolean
+operations
+    check(p : Patient)
+end
+
+class Multiple
+attributes
+  HighRiskSituation : Boolean
+  Confused : Boolean
+  Lethargic: Boolean
+  Disoriented : Boolean
+  SeverePain : Boolean
+  Distress: Boolean
+operations
+    check(p : Patient)
+    assess(p : Patient)
+end
+
+class Resources
+attributes
+  ResourcesNeeded : Integer
+end
+
+class DangerZone
+attributes
+  vitals : Integer
+operations
+  checkVitals(p : Patient)
+end
+
+-- associations
+composition ConsistOf between
+  Hospital[1]
+  Patient[1..*]
+end
+
+association StepOne between
+  ImmediateIntervention[1]
+  Patient[1..*]
+end
+
+association Yes between
+  ImmediateIntervention[1]
+  PatientAfter[1..*]
+end
+
+association No between
+  ImmediateIntervention[1]
+  Multiple[1]
+end
+
+association Yes1 between
+  PatientAfter[1]
+  Multiple[1]
+end
+
+association AllNo between
+  Resources[1]
+  Multiple[1]
+end
+
+association LessThanTwo between
+  Resources[1]
+  PatientAfter[1]
+end
+
+association Many between
+  Resources[1]
+  DangerZone[1]
+end
+
+association ConsiderOrNo between
+  DangerZone[1]
+  PatientAfter[1]
+end
+
+-- enumeration
+
+enum Severity {Expectant, Immediate, Delayed, Minor}
+enum Gender {Male, Female}

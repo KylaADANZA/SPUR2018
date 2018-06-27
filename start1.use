@@ -1,0 +1,153 @@
+model START
+-- classes
+
+class Hospital
+attributes
+  name : String
+  phone : Integer
+  address : String
+end
+
+class Patient
+attributes
+  FirstName : String
+  LastName : String
+  id : String
+  gender : Gender
+  birthday : Integer
+  dateAdmit : String
+  timeAdmit : String
+  accident : Boolean
+  assigned : Boolean
+  riskChecked: Boolean
+end
+
+class PatientAfter
+attributes
+  severity: Severity
+end
+
+class WalkAbility
+attributes
+  walk: Boolean
+operations
+  check(p : Patient)
+end
+
+class SpontaneousBreathing
+attributes
+  breathing : Boolean
+operations
+  check(p : Patient)
+end
+
+class PositionAirway
+attributes
+  breathing : Boolean
+operations
+  ChangePosition(p : Patient)
+  Recheck(p : Patient)
+end
+
+class RespRate
+attributes
+  RespiratoryRate : Integer
+operations
+  MeasureRespRate(p : Patient)
+end
+
+class Perfusion
+attributes
+  Pulse : Boolean
+  CapRefill : Integer
+operations
+  checkPulse(p : Patient)
+  MeasureCapRefill(p : Patient)
+end
+
+class MentalState
+attributes
+  status : String
+operations
+  checkState(p : Patient)
+end
+
+-- associations
+
+composition ConsistOf between
+  Hospital[1]
+  Patient[1..*]
+end
+
+association Yes between
+  PatientAfter[1]
+  WalkAbility[1]
+end
+
+association StepOne between
+  Patient[1..*]
+  WalkAbility[1]
+end
+
+association No between
+  SpontaneousBreathing[1]
+  WalkAbility[1]
+end
+
+association No1 between
+  SpontaneousBreathing[1]
+  PositionAirway[1]
+end
+
+
+association ApneaORSpontaneousBreathing between
+  PatientAfter[1]
+  PositionAirway[1]
+end
+
+association Yes1 between
+  SpontaneousBreathing[1]
+  RespRate[1]
+end
+
+association GreaterThan30 between
+  PatientAfter[1]
+  RespRate[1]
+end
+
+association LessThan30 between
+  Perfusion[1]
+  RespRate[1]
+end
+
+association PulseAbsent between
+  Perfusion[1]
+  PatientAfter[1]
+end
+
+association PulsePresent between
+  Perfusion[1]
+  MentalState[1]
+end
+
+association Commands between
+  PatientAfter[1]
+  MentalState[1]
+end
+
+-- enumeration
+
+enum Severity {Expectant, Immediate, Delayed, Minor}
+enum Gender {Male, Female}
+
+--constraints
+
+--constraints
+
+--context WalkAbility::check(p: Patient)
+--post  p.is_checked= true
+
+
+--context SpontaneousBreathing::check(p : Patient)
+--pre checkPre1: p.can_walk -> false
+--post checkPost1: boolean p.is_breathing = true
