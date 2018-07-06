@@ -1,0 +1,124 @@
+model ESI
+
+--classes
+
+class Hospital
+attributes
+  name : String
+  phone : Integer
+  address : String
+end
+
+class Patient
+attributes
+  FirstName : String
+  LastName : String
+  id : String
+  gender : Gender
+  birthday : Integer
+  dateAdmit : String
+  timeAdmit : String
+  accident : Boolean
+  assigned : Boolean
+  riskChecked: Boolean
+end
+
+class TreatedPatient
+attributes
+  RequiresLifeSavingIntervention: Boolean
+  highRiskSituation: Boolean
+  confused: Boolean
+  lethargic: Boolean
+  Disoriented: Boolean
+  SeverePain: Boolean
+  Distress: Boolean
+  ResourcesRequired: Integer
+  VitalZones:Integer
+end
+
+class Severity
+attributes
+  severity: severity
+operations
+  checkIfInterventionNeeded(p: Patient)
+  assessSituation(p: Patient)
+  examine(p: Patient)
+  checkForPain(p: Patient)
+  checkResourcesNeeded(p: Patient)
+  measureVitalZones(p: Patient)
+end
+
+class Immediate
+operations
+  ResuscitationRequired(p: Patient)
+  ContinuousObservation(p: Patient)
+end
+
+class VeryUrgent
+operations
+  Stabilize(p: Patient)
+  Monitor(p: Patient)
+end
+
+class Urgent
+operations
+  Supervision(p: Patient)
+end
+
+class Minor
+operations
+  Reassess(p: Patient)
+end
+
+class Delayed
+operations
+  CanWait(p: Patient)
+  Reassess(p: Patient)
+end
+
+-- associations
+
+composition ConsistOf between
+  Hospital[1]
+  Patient[1..*]
+end
+
+association patient between
+  TreatedPatient[1]
+  Patient[1]
+end
+
+association treatment between
+  TreatedPatient[1]
+  Severity[1]
+end
+
+association veryUrgent between
+  Severity[1]
+  VeryUrgent[1]
+end
+
+
+association immediate between
+  Severity[1]
+  Immediate[1]
+end
+
+association minor between
+  Severity[1]
+  Minor[1]
+end
+
+association urgent between
+  Severity[1]
+  Urgent[1]
+end
+
+association delayed between
+  Severity[1]
+  Delayed[1]
+end
+-- enumeration
+
+enum severity {Immediate, VeryUrgent,Urgent,Minor, Delayed}
+enum Gender {Male, Female}
