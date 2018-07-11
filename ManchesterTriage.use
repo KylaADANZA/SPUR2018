@@ -1,0 +1,135 @@
+model ManchesterTriage
+
+--classes
+class Hospital
+attributes
+  name : String
+  phone : Integer
+  address : String
+end
+
+class Patient
+attributes
+  FirstName : String
+  LastName : String
+  id : String
+  gender : Gender
+  birthday : Integer
+  dateAdmit : String
+  timeAdmit : String
+  accident : Boolean
+  assigned : Boolean
+  riskChecked: Boolean
+end
+
+class TreatedPatient
+attributes
+  airwayCompromise: Boolean
+  inadequateBreathing: Boolean
+  shock: Boolean
+  severePain: Boolean
+  cardiacPain: Boolean
+  acutelyShortBreath: Boolean
+  pleuriticPain: Boolean
+  persistentVomiting: Boolean
+  SignificantCardiacHistory: Boolean
+  moderatePain: Boolean
+  vomiting: Boolean
+  recentMildPain: Boolean
+  recentProblem: Boolean
+end
+
+class Severity
+attributes
+  severity: severity
+operations
+  examineAirway(p: Patient)
+  checkForAdequateBreathing(p: Patient)
+  checkForShock(p: Patient)
+  measurePain(p: Patient)
+  examineCardiacPain(p: Patient)
+  measureBreathingRate(p: Patient)
+  checkPulse(p: Patient)
+  examinePleuriticPain(p: Patient)
+  checkForPersistentVomiting(p: Patient)
+  examineForCardiacHistory(p: Patient)
+  reMeasureForPain(p: Patient)
+  checkVomiting(p: Patient)
+  examineForMildPain(p: Patient)
+  checkForProblems(p: Patient)
+end
+
+class Immediate
+operations
+  ResuscitationRequired(p: Patient)
+  ContinuousObservation(p: Patient)
+end
+
+class VeryUrgent
+operations
+  Stabilize(p: Patient)
+  Monitor(p: Patient)
+end
+
+class Urgent
+operations
+  Supervision(p: Patient)
+end
+
+class Standard
+operations
+  Reassess(p: Patient)
+end
+
+class NonStandard
+operations
+  CanWait(p: Patient)
+  Reassess(p: Patient)
+end
+
+-- associations
+
+composition ConsistOf between
+  Hospital[1]
+  Patient[1..*]
+end
+
+association patient between
+  Patient[1]
+  TreatedPatient[1]
+end
+
+association treatment between
+  TreatedPatient[1]
+  Severity[1]
+end
+
+association veryUrgent between
+  Severity[1]
+  VeryUrgent[1]
+end
+
+association immediate between
+  Severity[1]
+  Immediate[1]
+end
+
+association standard between
+  Severity[1]
+  Standard[1]
+end
+
+association urgent between
+  Severity[1]
+  Urgent[1]
+end
+
+association nonStandard between
+  Severity[1]
+  NonStandard[1]
+end
+
+
+--enumeration
+enum severity {immediate, veryUrgent, urgent, standard, nonStandard}
+enum Gender {Male, Female}
